@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Frontend Interview Questions — JS · React · Next.js</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e29;
+    --border: #252a38;
+    --js: #f7df1e;
+    --js-dim: #3a3308;
+    --react: #61dafb;
+    --react-dim: #0b2f3a;
+    --next: #ffffff;
+    --next-dim: #1e2030;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #f7df1e;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 64px 24px 48px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(247,223,30,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--js);
+    border: 1px solid var(--js-dim);
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  h1 span.js   { color: var(--js); }
+  h1 span.react { color: var(--react); }
+  h1 span.next  { color: var(--next); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 480px;
+    margin: 0 auto 36px;
+  }
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+  /* NAV TABS */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,15,20,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .nav-tabs {
+    display: flex;
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 4px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 16px 12px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active-js    { color: var(--js);    border-color: var(--js); }
+  .tab-btn.active-react { color: var(--react); border-color: var(--react); }
+  .tab-btn.active-next  { color: var(--next);  border-color: var(--next); }
+  .tab-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+  .dot-js    { background: var(--js); }
+  .dot-react { background: var(--react); }
+  .dot-next  { background: var(--next); }
+
+  /* SEARCH */
+  .search-wrap {
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+  }
+  .search-box {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    padding: 12px 18px 12px 44px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 14px center;
+  }
+  .search-box:focus { border-color: var(--js); }
+  .search-box::placeholder { color: var(--muted); }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 52px; height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  .section-icon.js    { background: var(--js-dim);    color: var(--js); }
+  .section-icon.react { background: var(--react-dim); color: var(--react); }
+  .section-icon.next  { background: var(--next-dim);  color: var(--next); }
+  .section-title { font-size: 1.5rem; font-weight: 700; }
+  .section-count { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+  /* CATEGORY GROUPS */
+  .category {
+    margin-bottom: 40px;
+  }
+  .category-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding-left: 4px;
+  }
+
+  /* QUESTION CARDS */
+  .q-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
+    position: relative;
+  }
+  .q-card:hover { background: var(--surface2); }
+  .q-card.js-card:hover    { border-color: var(--js-dim); }
+  .q-card.react-card:hover { border-color: var(--react-dim); }
+  .q-card.next-card:hover  { border-color: var(--next-dim); }
+  .q-card.done { opacity: 0.45; }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    min-width: 30px;
+    padding-top: 2px;
+    color: var(--muted);
+  }
+  .q-text {
+    font-size: 0.93rem;
+    font-weight: 500;
+    flex: 1;
+    line-height: 1.5;
+  }
+  .q-check {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .q-card.done .q-check { background: #22c55e; border-color: #22c55e; }
+  .q-check::after {
+    content: '';
+    display: none;
+    width: 5px; height: 9px;
+    border: 2px solid #000;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+  }
+  .q-card.done .q-check::after { display: block; }
+  .diff {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .diff-hard  { background: rgba(239,68,68,0.15); color: #f87171; }
+  .diff-med   { background: rgba(251,146,60,0.15); color: #fb923c; }
+  .diff-easy  { background: rgba(34,197,94,0.15);  color: #4ade80; }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    margin-bottom: 28px;
+  }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+  .fill-js    { background: var(--js); }
+  .fill-react { background: var(--react); }
+  .fill-next  { background: var(--next); }
+
+  /* HIDDEN BY SEARCH */
+  .q-card.hidden { display: none; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    .stats { gap: 20px; }
+    .q-text { font-size: 0.875rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">300 Questions · 3 Technologies</div>
+  <h1>Frontend Interview<br><span class="js">JS</span> · <span class="react">React</span> · <span class="next">Next.js</span></h1>
+  <p class="subtitle">High-frequency, hard-hitting questions asked at top product companies. Track what you've studied.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" style="color:var(--js)">100</div><div class="stat-label">JavaScript</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--react)">100</div><div class="stat-label">React</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--next)">100</div><div class="stat-label">Next.js</div></div>
+  </div>
+</header>
+
+<div class="nav-wrap">
+  <div class="nav-tabs">
+    <button class="tab-btn active-js" onclick="switchTab('js')"><span class="tab-dot dot-js"></span>JavaScript</button>
+    <button class="tab-btn" onclick="switchTab('react')"><span class="tab-dot dot-react"></span>React</button>
+    <button class="tab-btn" onclick="switchTab('next')"><span class="tab-dot dot-next"></span>Next.js</button>
+  </div>
+</div>
+
+<div class="search-wrap">
+  <input class="search-box" type="text" id="searchInput" placeholder="Search questions…" oninput="filterQuestions()" />
+</div>
+
+<main>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<div class="section active" id="sec-js">
+  <div class="section-header">
+    <div class="section-icon js">JS</div>
+    <div>
+      <div class="section-title">JavaScript</div>
+      <div class="section-count">100 most-asked interview questions</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span>Progress</span><span id="js-prog-text">0 / 100</span></div>
+    <div class="progress-bar"><div class="progress-fill fill-js" id="js-prog-fill"></div></div>
+  </div>
+
+  <div class="category"><div class="category-label">Core Concepts</div><div class="q-grid" id="js-q"></div></div>
+</div>
+
+<!-- ===================== REACT ===================== -->
+<div class="section" id="sec-react">
+  <div class="section-header">
+    <div class="section-icon react">⚛</div>
+    <div>
+      <div class="section-title">React</div>
+      <div class="section-count">100 most-asked interview questions</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span>Progress</span><span id="react-prog-text">0 / 100</span></div>
+    <div class="progress-bar"><div class="progress-fill fill-react" id="react-prog-fill"></div></div>
+  </div>
+  <div class="category"><div class="category-label">Core Concepts</div><div class="q-grid" id="react-q"></div></div>
+</div>
+
+<!-- ===================== NEXT.JS ===================== -->
+<div class="section" id="sec-next">
+  <div class="section-header">
+    <div class="section-icon next">N</div>
+    <div>
+      <div class="section-title">Next.js</div>
+      <div class="section-count">100 most-asked interview questions</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span>Progress</span><span id="next-prog-text">0 / 100</span></div>
+    <div class="progress-bar"><div class="progress-fill fill-next" id="next-prog-fill"></div></div>
+  </div>
+  <div class="category"><div class="category-label">Core Concepts</div><div class="q-grid" id="next-q"></div></div>
+</div>
+
+</main>
+
+<footer>Click any question to mark it as done · Progress saves in your browser</footer>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const jsQuestions = [
+  ["What is the difference between var, let, and const?","easy"],
+  ["Explain hoisting in JavaScript.","med"],
+  ["What are closures and how do they work?","hard"],
+  ["What is the event loop in JavaScript?","hard"],
+  ["Explain the concept of prototypal inheritance.","hard"],
+  ["What is the difference between == and ===?","easy"],
+  ["What are Promises and how do they work?","med"],
+  ["Explain async/await and how it relates to Promises.","med"],
+  ["What is the difference between null and undefined?","easy"],
+  ["What is a higher-order function? Give examples.","med"],
+  ["Explain the difference between call, apply, and bind.","hard"],
+  ["What is the 'this' keyword and how does it behave?","hard"],
+  ["What is event delegation and why is it useful?","med"],
+  ["What are arrow functions and how are they different from regular functions?","med"],
+  ["Explain the concept of scope (global, function, block).","med"],
+  ["What is the Temporal Dead Zone (TDZ)?","hard"],
+  ["What are generators and iterators?","hard"],
+  ["What is a WeakMap and WeakSet? When would you use them?","hard"],
+  ["What is memoization? Implement a simple memoize function.","hard"],
+  ["What are Symbol types used for?","hard"],
+  ["Explain debouncing and throttling with examples.","hard"],
+  ["What is the difference between deep copy and shallow copy?","med"],
+  ["How does JavaScript handle asynchronous operations?","med"],
+  ["What is the difference between setTimeout and setInterval?","easy"],
+  ["Explain how the prototype chain works.","hard"],
+  ["What is currying in JavaScript?","hard"],
+  ["What are pure functions and side effects?","med"],
+  ["Explain destructuring assignment in ES6.","med"],
+  ["What are template literals and tagged templates?","med"],
+  ["What is the spread and rest operator?","med"],
+  ["What is optional chaining (?.) and nullish coalescing (??)","med"],
+  ["Explain Map vs Object in JavaScript.","med"],
+  ["What is Set and how is it different from Array?","easy"],
+  ["What is the Proxy object in JavaScript?","hard"],
+  ["How does JavaScript's garbage collection work?","hard"],
+  ["What is an IIFE and when would you use it?","med"],
+  ["What is the difference between synchronous and asynchronous code?","easy"],
+  ["Explain the concept of coercion in JavaScript.","med"],
+  ["What is the module system in JavaScript (CommonJS vs ES Modules)?","med"],
+  ["What is tree shaking?","med"],
+  ["Explain the difference between Array.map, Array.filter, and Array.reduce.","med"],
+  ["What is Array.flat() and Array.flatMap()?","med"],
+  ["How does Object.freeze() differ from const?","med"],
+  ["What is the difference between Object.keys, Object.values, Object.entries?","easy"],
+  ["What is a Proxy and Reflect in JavaScript?","hard"],
+  ["What is function composition?","hard"],
+  ["What is the event bubbling and capturing?","med"],
+  ["What is stopPropagation vs preventDefault?","med"],
+  ["What are Web Workers?","hard"],
+  ["What is Service Worker and how does it differ from Web Worker?","hard"],
+  ["What is IndexedDB?","med"],
+  ["Explain localStorage vs sessionStorage vs cookies.","med"],
+  ["What is CORS and how do you handle it?","med"],
+  ["Explain XSS and CSRF attacks and prevention.","hard"],
+  ["What is JSON.stringify and JSON.parse? Gotchas?","med"],
+  ["What is the difference between for...in and for...of?","med"],
+  ["What are Symbol.iterator and custom iterables?","hard"],
+  ["What is Promise.all vs Promise.race vs Promise.allSettled vs Promise.any?","hard"],
+  ["What is microtask queue vs macrotask queue?","hard"],
+  ["Explain the concept of function overloading in JS.","med"],
+  ["What are getters and setters in JavaScript?","med"],
+  ["What is the difference between class and function-based constructors?","med"],
+  ["What are static methods in a class?","med"],
+  ["What is the instanceof operator?","easy"],
+  ["What is typeof and what are its quirks?","med"],
+  ["How does Array.sort work internally?","hard"],
+  ["What is the difference between slice and splice?","easy"],
+  ["What are truthy and falsy values in JavaScript?","easy"],
+  ["What is short-circuit evaluation?","easy"],
+  ["What is tail call optimization?","hard"],
+  ["Explain Object.assign vs spread operator for objects.","med"],
+  ["What is chaining in JavaScript?","med"],
+  ["What is lazy evaluation?","hard"],
+  ["What are design patterns? Name 3 common ones in JS.","hard"],
+  ["What is the Observer pattern?","hard"],
+  ["What is the Singleton pattern?","med"],
+  ["What is the Module pattern?","med"],
+  ["How do you handle errors in async/await?","med"],
+  ["What is try/catch/finally?","easy"],
+  ["What are custom errors in JavaScript?","med"],
+  ["What is the difference between throw and reject?","med"],
+  ["What is function memoization and implement it.","hard"],
+  ["What is the difference between composition and inheritance?","hard"],
+  ["What is Array.from() used for?","med"],
+  ["Explain the concept of lazy loading.","med"],
+  ["What are bitwise operators in JavaScript?","hard"],
+  ["What is NaN and how to check for it?","med"],
+  ["What is Infinity in JavaScript?","easy"],
+  ["What are property descriptors in JavaScript?","hard"],
+  ["What is Object.create()?","hard"],
+  ["What is the difference between arguments object and rest params?","med"],
+  ["What are tagged template literals?","hard"],
+  ["What is the globalThis object?","med"],
+  ["What is the AbortController API?","hard"],
+  ["What is the Intersection Observer API?","med"],
+  ["What is ResizeObserver?","med"],
+  ["How do you implement a polyfill?","hard"],
+  ["What is the difference between declaration and expression functions?","med"],
+  ["What is an async generator?","hard"],
+  ["What is BigInt in JavaScript?","med"],
+  ["What is the difference between Object.seal() and Object.freeze()?","hard"],
+];
+
+const reactQuestions = [
+  ["What is React and how does the Virtual DOM work?","easy"],
+  ["What are the differences between functional and class components?","med"],
+  ["What is JSX and how does it compile?","easy"],
+  ["Explain useState hook with examples.","easy"],
+  ["Explain useEffect hook and its dependency array.","med"],
+  ["What is useRef and when would you use it?","med"],
+  ["What is useContext and how does it solve prop drilling?","med"],
+  ["What is useReducer and when to prefer it over useState?","med"],
+  ["What is useMemo and when should you use it?","hard"],
+  ["What is useCallback and how does it prevent re-renders?","hard"],
+  ["What is useLayoutEffect vs useEffect?","hard"],
+  ["What are custom hooks? Create a useDebounce hook.","hard"],
+  ["What is React.memo and how does it work?","med"],
+  ["What are keys in React and why are they important?","med"],
+  ["What is reconciliation in React?","hard"],
+  ["Explain the React component lifecycle.","med"],
+  ["What are Error Boundaries in React?","hard"],
+  ["What is code splitting and React.lazy?","med"],
+  ["What is Suspense in React?","med"],
+  ["What is the Context API and its limitations?","med"],
+  ["What is Redux and when should you use it?","med"],
+  ["What is the difference between controlled and uncontrolled components?","med"],
+  ["How do you handle forms in React?","med"],
+  ["What is React.forwardRef?","hard"],
+  ["What is useImperativeHandle?","hard"],
+  ["Explain prop types and TypeScript in React.","med"],
+  ["What are Higher Order Components (HOC)?","hard"],
+  ["What is the render props pattern?","hard"],
+  ["What is the Compound Component pattern?","hard"],
+  ["What is the difference between state and props?","easy"],
+  ["What causes unnecessary re-renders in React?","hard"],
+  ["How does batching work in React 18?","hard"],
+  ["What is React 18's concurrent mode?","hard"],
+  ["What are transitions in React 18 (useTransition)?","hard"],
+  ["What is useDeferredValue?","hard"],
+  ["What is React Fiber architecture?","hard"],
+  ["What is server-side rendering (SSR) in React?","hard"],
+  ["What is hydration in React?","hard"],
+  ["How do you optimize React performance?","hard"],
+  ["What is React.StrictMode and what does it do?","med"],
+  ["What is the difference between React.Component and PureComponent?","med"],
+  ["What is componentDidMount equivalent in hooks?","med"],
+  ["What is componentWillUnmount equivalent in hooks?","med"],
+  ["How do you fetch data in React hooks?","med"],
+  ["What is the stale closure problem in hooks?","hard"],
+  ["What is the exhaustive-deps ESLint rule?","med"],
+  ["What is React DevTools and how do you use it?","easy"],
+  ["How do you implement lazy loading of images in React?","med"],
+  ["What is the React testing library? How do you test hooks?","med"],
+  ["What is Enzyme vs React Testing Library?","med"],
+  ["How do you handle side effects with Redux?","med"],
+  ["What is Redux Toolkit and how is it different from Redux?","med"],
+  ["What is Zustand and how does it compare to Redux?","med"],
+  ["What is React Query (TanStack Query)?","med"],
+  ["What is SWR and how does it work?","med"],
+  ["What is the difference between optimistic and pessimistic UI updates?","hard"],
+  ["What is React Portal and when would you use it?","hard"],
+  ["How do you implement infinite scroll in React?","hard"],
+  ["How do you implement a virtualized list in React?","hard"],
+  ["What is react-window vs react-virtualized?","hard"],
+  ["What is the difference between useState and useRef for storing values?","hard"],
+  ["How do you prevent memory leaks in React?","hard"],
+  ["What is the dependency injection pattern in React?","hard"],
+  ["What are render phases in React (render vs commit)?","hard"],
+  ["What is a fragment in React and why use it?","easy"],
+  ["What is React.Children API?","hard"],
+  ["What is the defaultProps and how to type defaults in TS?","med"],
+  ["What is the displayName property in React?","med"],
+  ["How do you share state between sibling components?","med"],
+  ["What is lifting state up in React?","med"],
+  ["How do you implement global state without Redux?","med"],
+  ["What is the Provider pattern?","med"],
+  ["How do you implement undo/redo in React?","hard"],
+  ["What is event pooling in older React versions?","hard"],
+  ["How do you animate elements in React?","med"],
+  ["What is Framer Motion?","med"],
+  ["How do you implement drag and drop in React?","hard"],
+  ["What is the difference between SSR, CSR, and SSG?","hard"],
+  ["What is React Server Components (RSC)?","hard"],
+  ["What are the rules of hooks?","med"],
+  ["What is the use() hook in React 19?","hard"],
+  ["What is the React compiler (React Forget)?","hard"],
+  ["How do you handle authentication in React?","med"],
+  ["What is protected routes pattern in React Router?","med"],
+  ["What is React Router v6 and its changes?","med"],
+  ["How do you implement breadcrumbs in React?","med"],
+  ["What is the difference between push and replace in routing?","med"],
+  ["How do you handle 404 pages in React?","easy"],
+  ["What is Accessibility (a11y) in React?","med"],
+  ["What is ARIA in React?","med"],
+  ["What are synthetic events in React?","med"],
+  ["What is memoization in React and when to avoid it?","hard"],
+  ["How do you implement a design system in React?","hard"],
+  ["What is Storybook and why use it?","med"],
+  ["How do you write a custom renderer in React?","hard"],
+  ["What is react-dom vs react?","med"],
+  ["What is ReactDOM.createRoot() in React 18?","med"],
+  ["How do you debug performance issues in React?","hard"],
+  ["What is the Profiler API in React?","hard"],
+];
+
+const nextQuestions = [
+  ["What is Next.js and how does it differ from plain React?","easy"],
+  ["What is the difference between pages router and app router?","med"],
+  ["What is file-based routing in Next.js?","easy"],
+  ["What is getStaticProps and when do you use it?","med"],
+  ["What is getServerSideProps and when do you use it?","med"],
+  ["What is getStaticPaths?","med"],
+  ["What is Incremental Static Regeneration (ISR)?","hard"],
+  ["What are Server Components in Next.js App Router?","hard"],
+  ["What are Client Components and when do you need them?","med"],
+  ["What is the difference between 'use client' and 'use server' directives?","hard"],
+  ["What are Server Actions in Next.js?","hard"],
+  ["What is the layout.js file in App Router?","med"],
+  ["What is loading.js and how does it enable streaming?","hard"],
+  ["What is error.js in Next.js?","med"],
+  ["What is not-found.js?","easy"],
+  ["What is the template.js file?","hard"],
+  ["How does Next.js handle metadata (SEO)?","med"],
+  ["What is the next/image component and its benefits?","med"],
+  ["What is the next/link component?","easy"],
+  ["What is the next/font system?","med"],
+  ["What is the next/script component?","med"],
+  ["How does Next.js handle environment variables?","med"],
+  ["What is the public directory in Next.js?","easy"],
+  ["What is the next.config.js file?","med"],
+  ["How do you create API routes in Next.js?","med"],
+  ["What is Route Handlers in App Router (route.ts)?","med"],
+  ["What is middleware in Next.js?","hard"],
+  ["How does Next.js handle authentication?","hard"],
+  ["What is NextAuth.js?","med"],
+  ["What is the difference between static and dynamic rendering in Next.js?","hard"],
+  ["What is Partial Prerendering (PPR)?","hard"],
+  ["What is Streaming in Next.js and how does Suspense enable it?","hard"],
+  ["What is the fetch() caching behavior in Next.js App Router?","hard"],
+  ["What are cache tags and revalidation in Next.js?","hard"],
+  ["What is the revalidatePath and revalidateTag function?","hard"],
+  ["What is unstable_cache in Next.js?","hard"],
+  ["How does Next.js handle redirects and rewrites?","med"],
+  ["What are dynamic routes in Next.js?","med"],
+  ["What are catch-all routes ([...slug])?","med"],
+  ["What are optional catch-all routes ([[...slug]])?","hard"],
+  ["What are parallel routes in Next.js?","hard"],
+  ["What are intercepting routes?","hard"],
+  ["What is the @folder convention in App Router?","hard"],
+  ["How do you implement internationalization (i18n) in Next.js?","hard"],
+  ["What is the next/navigation vs next/router?","med"],
+  ["What are the useRouter, usePathname, useSearchParams hooks?","med"],
+  ["How do you persist state across navigation in Next.js?","hard"],
+  ["What is the Link prefetching behavior?","med"],
+  ["How do you handle 404 and 500 errors in Next.js?","med"],
+  ["What is Next.js middleware and how does it run at the edge?","hard"],
+  ["What is the Edge Runtime in Next.js?","hard"],
+  ["What is the Node.js Runtime vs Edge Runtime?","hard"],
+  ["What is Turbopack and how does it compare to Webpack?","hard"],
+  ["How does Next.js optimize images automatically?","med"],
+  ["What is the Vercel Image Optimization API?","med"],
+  ["How do you deploy Next.js outside of Vercel?","med"],
+  ["What is the output: 'export' option in Next.js?","med"],
+  ["What is output: 'standalone' mode?","hard"],
+  ["How do you implement dark mode in Next.js?","med"],
+  ["What is the cookies() and headers() API in App Router?","hard"],
+  ["What is the connection() function in Next.js 15?","hard"],
+  ["What are React cache() and use() in Next.js context?","hard"],
+  ["How do you implement search params in App Router?","med"],
+  ["What is the difference between searchParams prop and useSearchParams?","hard"],
+  ["How do you handle form submissions with Server Actions?","hard"],
+  ["What is useFormState and useFormStatus?","hard"],
+  ["What is the optimistic UI pattern with useOptimistic?","hard"],
+  ["How do you implement file uploads in Next.js?","hard"],
+  ["What is the Next.js instrumentation.ts file?","hard"],
+  ["What is OpenTelemetry support in Next.js?","hard"],
+  ["How do you configure Content Security Policy in Next.js?","hard"],
+  ["How does Next.js handle TypeScript configuration?","med"],
+  ["What is the tsconfig paths alias in Next.js?","med"],
+  ["How do you use CSS Modules in Next.js?","easy"],
+  ["How do you use Tailwind CSS in Next.js?","easy"],
+  ["What is the global CSS file in Next.js?","easy"],
+  ["How do you use Sass in Next.js?","easy"],
+  ["What is the React Server Component payload?","hard"],
+  ["How does the App Router handle data mutations?","hard"],
+  ["What is the difference between push() and replace() in useRouter?","med"],
+  ["What is next/dynamic?","med"],
+  ["When would you use dynamic() over React.lazy()?","hard"],
+  ["How do you implement a loading skeleton in Next.js?","med"],
+  ["What is the next.config.js headers() function?","med"],
+  ["What is Multi-Zone architecture in Next.js?","hard"],
+  ["What is the _app.js equivalent in App Router?","med"],
+  ["What is a root layout in Next.js?","med"],
+  ["What is a nested layout and how does it improve performance?","hard"],
+  ["How do you measure Core Web Vitals in Next.js?","hard"],
+  ["What is next/analytics?","med"],
+  ["What changed in Next.js 14 vs 13?","hard"],
+  ["What is new in Next.js 15?","hard"],
+  ["What is the use of generateStaticParams?","med"],
+  ["How do you cache database queries in Next.js?","hard"],
+  ["What is the draftMode() API in Next.js?","hard"],
+  ["How do you implement rate limiting in Next.js middleware?","hard"],
+  ["What is the forbidden() and unauthorized() response in Next.js 15?","hard"],
+  ["How do you test Next.js applications?","hard"],
+  ["What is Playwright vs Cypress for Next.js E2E tests?","med"],
+];
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+const storage = {};
+try {
+  const raw = sessionStorage.getItem('fiq_done');
+  if (raw) Object.assign(storage, JSON.parse(raw));
+} catch(e){}
+
+function save() {
+  try { sessionStorage.setItem('fiq_done', JSON.stringify(storage)); } catch(e){}
+}
+
+function diffClass(d) {
+  if (d === 'hard') return 'diff diff-hard';
+  if (d === 'med')  return 'diff diff-med';
+  return 'diff diff-easy';
+}
+function diffLabel(d) {
+  if (d === 'hard') return 'Hard';
+  if (d === 'med')  return 'Medium';
+  return 'Easy';
+}
+
+function renderQuestions(questions, containerId, tech) {
+  const container = document.getElementById(containerId);
+  questions.forEach(([q, d], i) => {
+    const id = `${tech}-${i}`;
+    const isDone = !!storage[id];
+    const card = document.createElement('div');
+    card.className = `q-card ${tech}-card${isDone ? ' done' : ''}`;
+    card.dataset.id = id;
+    card.dataset.text = q.toLowerCase();
+    card.innerHTML = `
+      <span class="q-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="q-text">${q}</span>
+      <span class="${diffClass(d)}">${diffLabel(d)}</span>
+      <div class="q-check"></div>
+    `;
+    card.addEventListener('click', () => toggleCard(card, id, tech));
+    container.appendChild(card);
+  });
+  updateProgress(tech);
+}
+
+function toggleCard(card, id, tech) {
+  const done = !storage[id];
+  storage[id] = done || undefined;
+  if (!done) delete storage[id];
+  card.classList.toggle('done', done);
+  save();
+  updateProgress(tech);
+}
+
+function updateProgress(tech) {
+  const total = tech === 'js' ? jsQuestions.length : tech === 'react' ? reactQuestions.length : nextQuestions.length;
+  let count = 0;
+  for(let k in storage) { if(k.startsWith(tech+'-') && storage[k]) count++; }
+  document.getElementById(`${tech}-prog-text`).textContent = `${count} / ${total}`;
+  document.getElementById(`${tech}-prog-fill`).style.width = `${(count/total*100).toFixed(1)}%`;
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+
+let currentTab = 'js';
+const tabs = { js: 0, react: 1, next: 2 };
+
+function switchTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.className = 'tab-btn';
+    if (i === tabs[tab]) b.classList.add(`active-${tab}`);
+  });
+  currentTab = tab;
+  document.getElementById('searchInput').value = '';
+  filterQuestions();
+}
+
+// ─── SEARCH ──────────────────────────────────────────────────────────────────
+
+function filterQuestions() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('#sec-' + currentTab + ' .q-card').forEach(card => {
+    card.classList.toggle('hidden', q.length > 0 && !card.dataset.text.includes(q));
+  });
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+
+renderQuestions(jsQuestions,   'js-q',    'js');
+renderQuestions(reactQuestions,'react-q', 'react');
+renderQuestions(nextQuestions, 'next-q',  'next');
+</script>
+</body>
+</html>
